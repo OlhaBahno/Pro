@@ -1,4 +1,4 @@
-class Rights
+class Permission
 
   attr_reader :path, :name
   def initialize(path, name)
@@ -6,31 +6,33 @@ class Rights
     @name = name
   end
 
-  def get_res_string(name_file)
-    system("cd #{@path} && icacls #{@name} > #{name_file}.txt")
-    written_file = File.open("#{@path}\\#{name_file}.txt")
-    written_file.each do |line|
-      return line if line.include?'Users'
+  def users_string
+    line = `cd #{@path} && icacls #{@name}`
+    line_users = ''
+    (line.index('Users')..line.size).each do |number|
+      line_users += line[number]
+      break if line[number] == "\n"
     end
+    line_users
   end
 
-  def print_rights(rights_line)
-    res_string = 'Users have '
-    case
-    when rights_line.include?('(F)') then res_string += 'full access'
-    when rights_line.include?('(N)') then res_string += 'no access'
-    when rights_line.include?('(M)') then res_string += 'modify access'
-    when rights_line.include?('(RX)') then res_string += 'read-and-execute access'
-    when rights_line.include?('(R)') then res_string += 'read access'
-    when rights_line.include?('(W)') then res_string += 'write access'
-    when rights_line.include?('(D)') then res_string += 'delete access'
-    else res_string += '?????'
+  def print_permissions(permission_line)
+    result_string = 'Users have '
+    permission = { '(F)' => 'full access',
+                   '(N)' => 'no access',
+                   '(M)' => 'modify access',
+                   '(RX)' => 'read-and-execute access',
+                   '(R)' => 'read access',
+                   '(W)' => 'write access',
+                   '(D)' => 'delete access' }
+    permission.each do |number, value|
+      result_string += value if permission_line.include?number
     end
-    res_string
+    result_string
   end
 
-  def display_res(access_string, rights)
-    puts("String with access: #{access_string.strip}")
-    puts(rights)
+  def display_result(access_string, permission)
+    puts("String with access: #{access_string}")
+    puts(permission)
   end
 end
