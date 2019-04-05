@@ -1,6 +1,6 @@
 class Permission
 
-  attr_reader :path, :name
+  attr_accessor :path, :name
 
   PERMISSIONS = { '(F)' => 'full access',
                   '(N)' => 'no access',
@@ -10,7 +10,7 @@ class Permission
                   '(W)' => 'write access',
                   '(D)' => 'delete access' }.freeze
 
-  def initialize(path, name)
+  def initialize(path = '', name = '')
     @path = path
     @name = name
   end
