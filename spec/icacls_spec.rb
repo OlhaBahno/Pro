@@ -15,7 +15,7 @@ describe Permission do
   end
 
   it 'should return RX access' do
-    @users_permission.path = 'C:\\Program Files (x86)\\Entity Framework Tools'
+    @users_permission.path = File.join('C:', 'Program Files (x86)', 'Entity Framework Tools')
     @users_permission.name = 'eula.rtf'
     expected_result = 'Users have read-and-execute access'
     expect(final_result(@users_permission)).to eq expected_result
@@ -23,7 +23,7 @@ describe Permission do
   end
 
   it 'should return R access' do
-    @users_permission.path = 'C:\\PerfLogs\\Admin'
+    @users_permission.path = File.join('C:', 'PerfLogs', 'Admin')
     @users_permission.name = 'forPAL_000001.blg'
     expected_result = 'Users have read access'
     expect(final_result(@users_permission)).to eq expected_result
@@ -31,7 +31,7 @@ describe Permission do
   end
 
   it "shouldn't return W access" do
-    @users_permission.path = 'C:\\Program Files (x86)\\Entity Framework Tools'
+    @users_permission.path = File.join('C:', 'Program Files (x86)', 'Entity Framework Tools')
     @users_permission.name = 'eula.rtf'
     expected_result = 'Users have write access'
     expect(final_result(@users_permission)).not_to eq expected_result
