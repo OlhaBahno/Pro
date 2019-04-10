@@ -24,11 +24,9 @@ module TestRail
     attr_accessor :password
 
     def initialize(base_url)
-      if !base_url.match(/\/$/)
-        base_url += '/'
-      end
+      base_url += '/' unless base_url.match(/\/$/)
       @url = base_url + 'index.php?/api/v2/'
-			end
+      end
 
     def send_get(uri)
       _send_request('GET', uri, nil)
@@ -57,20 +55,19 @@ module TestRail
       end
       response = conn.request(request)
 
-      if response.body && !response.body.empty?
-        result = JSON.parse(response.body)
-      else
-        result = {}
-      end
+      result = if response.body && !response.body.empty?
+                 JSON.parse(response.body)
+               else
+                 {}
+               end
 
       if response.code != '200'
-        if result && result.key?('error')
-          error = '"' + result['error'] + '"'
-        else
-          error = 'No additional error message received'
-        end
-        raise APIError.new('TestRail API returned HTTP %s (%s)' %
-          [response.code, error])
+        error = if result && result.key?('error')
+                  '"' + result['error'] + '"'
+                else
+                  'No additional error message received'
+                end
+        raise APIError, format('TestRail API returned HTTP %s (%s)', response.code, error)
       end
 
       result
