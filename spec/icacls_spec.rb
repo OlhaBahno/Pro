@@ -2,7 +2,7 @@ require './icacls_files/icacls_work'
 require 'rspec'
 require './testrail/testrail.rb'
 require './icacls_files/final_result_test'
-require './icacls_files/credentials.rb'
+require './testrail/credentials.rb'
 
 describe Permission do
   include ResultTesting
